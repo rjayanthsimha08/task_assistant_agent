@@ -1,8 +1,7 @@
-
 import pytest
 
-from task_agent import add, calculate, run_agent, select_tool
 from task_agent import add, calculate, power, run_agent, select_tool
+
 
 def test_add():
     assert add(2, 3) == 5
