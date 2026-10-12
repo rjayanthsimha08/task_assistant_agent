@@ -32,7 +32,7 @@ jobs:
           cache-dependency-path: requirement-dev.txt
 
       - name: Install dependencies
-        run: python -m pip install -r requirements-dev.txt
+        run: python -m pip install -r requirement-dev.txt
 
       - name: Run Ruff
         run: python -m ruff check .
