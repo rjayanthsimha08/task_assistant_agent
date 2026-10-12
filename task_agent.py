@@ -10,6 +10,12 @@ def add(a: float, b: float) -> float:
     """Add two numbers."""
     return a + b
 
+def power(base: float, exponent: int) -> float:
+    """Raise a number to an integer power."""
+    if not -100 <= exponent <= 100:
+        raise ValueError("Exponent must be between -100 and 100")
+
+    return base**exponent
 
 def calculate(a: float, op: str, b: float) -> float:
     """Calculate using an explicitly supported arithmetic operator."""
@@ -39,6 +45,8 @@ def select_tool(task: str) -> str:
         return "add"
     if command.startswith("calculate "):
         return "calculate"
+    if command.startswith("power "):
+        return "power"
 
     return "unknown"
 
@@ -54,7 +62,21 @@ def run_agent(task: str) -> str:
             "  add <number> <number>\n"
             "  calculate <number> <+|-|*|/> <number>\n"
             "  help"
+            "  power <base> <integer exponent>"
         )
+    if tool == "power":
+            match = re.fullmatch(
+                r"power\s+(-?\d+(?:\.\d+)?)\s+(-?\d+)",
+                command,
+                re.IGNORECASE,
+            )
+            if not match:
+                return "Error: use 'power <base> <integer exponent>'"
+
+            base = float(match.group(1))
+            exponent = int(match.group(2))
+            return f"Result: {power(base, exponent):g}"
+    
 
     try:
         if tool == "add":
