@@ -34,12 +34,12 @@ jobs:
       - name: Run tests
         run: python -m pytest -v
 
+
       - name: Package source
         run: |
           mkdir -p dist
           git archive --format=zip \
             --output=dist/task-assistant-agent.zip HEAD
-          cp README.md dist/README.md
 
       - name: Publish GitHub Release
         env:
@@ -47,6 +47,6 @@ jobs:
         run: |
           gh release create "${GITHUB_REF_NAME}" \
             dist/task-assistant-agent.zip \
-            dist/README.md \
             --title "Task Assistant ${GITHUB_REF_NAME}" \
             --generate-notes
+
