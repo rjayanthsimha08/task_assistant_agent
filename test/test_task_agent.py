@@ -1,7 +1,6 @@
-
 import pytest
 
-from task_agent import add, calculate, run_agent, select_tool
+from task_agent import add, calculate, power, run_agent, select_tool
 
 
 def test_add():
@@ -51,3 +50,27 @@ def test_agent_malformed_add():
 
 def test_agent_division_by_zero():
     assert "divide by zero" in run_agent("calculate 8 / 0")
+
+def test_power():
+    assert power(2, 3) == 8
+
+
+def test_power_with_zero_exponent():
+    assert power(5, 0) == 1
+
+
+def test_power_rejects_large_exponent():
+    with pytest.raises(ValueError, match="Exponent must be"):
+        power(2, 101)
+
+
+def test_power_tool_selection():
+    assert select_tool("power 2 3") == "power"
+
+
+def test_agent_power_command():
+    assert run_agent("power 2 3") == "Result: 8"
+
+
+def test_agent_invalid_power_command():
+    assert "Error:" in run_agent("power 2 invalid")

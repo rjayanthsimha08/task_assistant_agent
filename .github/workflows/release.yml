@@ -1,0 +1,52 @@
+
+name: Task Assistant Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Validate and Package
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: requirement-dev.txt
+
+      - name: Install dependencies
+        run: python -m pip install -r requirement-dev.txt
+
+      - name: Run Ruff
+        run: python -m ruff check .
+
+      - name: Run tests
+        run: python -m pytest -v
+
+      - name: Package source
+        run: |
+          mkdir -p dist
+          git archive --format=zip \
+            --output=dist/task-assistant-agent.zip HEAD
+          cp README.md dist/README.md
+
+      - name: Publish GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "${GITHUB_REF_NAME}" \
+            dist/task-assistant-agent.zip \
+            dist/README.md \
+            --title "Task Assistant ${GITHUB_REF_NAME}" \
+            --generate-notes
